@@ -1,17 +1,26 @@
-COMPILER = g++
-CCFLAGS = -g -Wall -o
+all: client1 server
 
-all: server.o client1.o
-	${COMPILER} server.o client1.o -o all
+client1: client1.o rpc.o
+	g++ client1.o rpc.o -o client1
 
-server.o: server.c server_function_skels.c server_function_skels.h server_functions.c server_functions.h rpc.h
-	${COMPILER} -c server.c server_function_skels.c server_function_skels.h server_functions.c server_functions.h rpc.h
+server: server.o server_functions.o server_function_skels.o rpc.o
+	g++ server.o server_functions.o server_function_skels.o rpc.o -o server
 
-client1.o: client1.c rpc.h
-	${COMPILER} -c client1.c rpc.h
+client1.o: client1.c
+	g++ -c client1.c
 
+server.o: server.c 
+	g++ -c server.c
+
+server_functions.o: server_functions.c server_functions.h
+	g++ -c server_functions.c
+	
+server_function_skels.o: server_function_skels.c server_function_skels.h
+	g++ -c server_function_skels.c
+
+rpc.o: rpc.c rpc.h
+	g++ -c rpc.c
+	
 clean: 
-	rm -rf *.o *.out all
-
-
-
+	rm -rf *o client1 server
+	
